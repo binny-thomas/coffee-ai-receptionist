@@ -1,0 +1,103 @@
+/* ==========================================
+   Global Styles
+   ========================================== */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    color: #333333;
+
+    margin: 0;
+    padding: 0;
+}
+
+/* ==========================================
+   Header
+   ========================================== */
+
+header {
+    background-color: #5c4033;
+    color: white;
+
+    padding: 20px;
+}
+
+/* ==========================================
+   Input Section
+   ========================================== */
+
+#input-section {
+    background-color: white;
+    padding: 25px;
+    border-radius: 10px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* ==========================================
+   Container
+   ========================================== */
+
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+/* ==========================================
+   Welcome Section
+   ========================================== */
+
+#welcome-section {
+    background-color: white;
+    padding: 25px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+/* ==========================================
+   Chat Section
+   ========================================== */
+
+#chat-section {
+    background-color: white;
+    padding: 25px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+#chat-messages {
+    height: 300px;
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+    background-color: #fafafa;
+    padding: 15px;
+    overflow-y: auto;
+}
+
+/* ==========================================
+   Message Input
+   ========================================== */
+
+#message-input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+/* ==========================================
+   Send Button
+   ========================================== */
+
+#send-button {
+    padding: 12px 20px;
+    background-color: #5c4033;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+

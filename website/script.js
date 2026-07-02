@@ -1,0 +1,45 @@
+// Get HTML elements
+const messageInput = document.getElementById("message-input");
+const sendButton = document.getElementById("send-button");
+const chatMessages = document.getElementById("chat-messages");
+
+// Listen for button clicks
+sendButton.addEventListener("click", async function () {
+
+    // Read user input
+    const message = messageInput.value;
+
+    // Show the user's message
+    chatMessages.innerHTML += `
+        <p><strong>You:</strong> ${message}</p>
+    `;
+
+    // Send request to FastAPI
+    const response = await fetch("http://127.0.0.1:8000/chat", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            message: message
+        })
+    });
+
+    // Read the JSON response
+    const data = await response.json();
+
+    // Show the AI reply
+    chatMessages.innerHTML += `
+        <p><strong>AI:</strong> ${data.reply}</p>
+    `;
+
+    // Clear the input box
+    messageInput.value = "";
+
+    // Put the cursor back in the input
+    messageInput.focus();
+
+    // Scroll to the latest message
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+});
