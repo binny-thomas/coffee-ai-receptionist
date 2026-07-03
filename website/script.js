@@ -11,7 +11,9 @@ sendButton.addEventListener("click", async function () {
 
     // Show the user's message
     chatMessages.innerHTML += `
-        <p><strong>You:</strong> ${message}</p>
+        <div class="message user-message">
+            <strong>You:</strong> ${message}
+        </div>
     `;
 
     // Send request to FastAPI
@@ -30,7 +32,9 @@ sendButton.addEventListener("click", async function () {
 
     // Show the AI reply
     chatMessages.innerHTML += `
-        <p><strong>AI:</strong> ${data.reply}</p>
+        <div class="message ai-message">
+            <strong>AI:</strong> ${data.reply}
+        </div>
     `;
 
     // Clear the input box
