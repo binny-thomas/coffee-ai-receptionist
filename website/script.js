@@ -6,6 +6,15 @@ const chatMessages = document.getElementById("chat-messages");
 // Listen for button clicks
 sendButton.addEventListener("click", handleSend);
 
+
+// Listen for Enter key presses
+messageInput.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+        handleSend();
+    }
+});
+
+
 // Show the user's message
 function addMessage(sender, text, className) {
     chatMessages.innerHTML += `
