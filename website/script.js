@@ -4,19 +4,27 @@ const sendButton = document.getElementById("send-button");
 const chatMessages = document.getElementById("chat-messages");
 
 // Listen for button clicks
-sendButton.addEventListener("click", async function () {
+sendButton.addEventListener("click", handleSend);
 
-    // Read user input
-    const message = messageInput.value;
-
-    // Show the user's message
+// Show the user's message
+function addMessage(sender, text, className) {
     chatMessages.innerHTML += `
-        <div class="message user-message">
-            <strong>You:</strong> ${message}
+        <div class="message ${className}">
+            <strong>${sender}:</strong> ${text}
         </div>
     `;
 
-    // Send request to FastAPI
+    scrollToBottom();
+}
+
+// Scroll to the latest message
+function scrollToBottom() {
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// Send request to FastAPI
+async function sendToAPI(message) {
+
     const response = await fetch("http://127.0.0.1:8000/chat", {
         method: "POST",
         headers: {
@@ -27,23 +35,30 @@ sendButton.addEventListener("click", async function () {
         })
     });
 
-    // Read the JSON response
-    const data = await response.json();
+    return await response.json();
+}
 
-    // Show the AI reply
-    chatMessages.innerHTML += `
-        <div class="message ai-message">
-            <strong>AI:</strong> ${data.reply}
-        </div>
-    `;
+async function handleSend() {
+    // Read user input
+    const message = messageInput.value.trim();
 
-    // Clear the input box
+    if (!message) {
+        return;
+    }
+
+    // Clear the input immediately
     messageInput.value = "";
 
-    // Put the cursor back in the input
+    // Return focus to the input
     messageInput.focus();
 
-    // Scroll to the latest message
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+    // Show the user's message
+    addMessage("You", message, "user-message");
 
-});
+    // Send request to the API and get the response
+    const response = await sendToAPI(message);
+
+    // Show the AI reply
+    addMessage("AI", response.reply, "ai-message");
+
+};
