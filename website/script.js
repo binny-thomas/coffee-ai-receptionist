@@ -10,6 +10,7 @@ sendButton.addEventListener("click", handleSend);
 // Listen for Enter key presses
 messageInput.addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
+        event.preventDefault();
         handleSend();
     }
 });
@@ -31,6 +32,41 @@ function scrollToBottom() {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
+function setLoading(isLoading) {
+    sendButton.disabled = isLoading;
+    messageInput.disabled = isLoading;
+
+    if (!isLoading) {
+        messageInput.focus();
+    }
+}
+
+function showLoadingIndicator() {
+
+    const loadingMessage = document.createElement("div");
+
+    loadingMessage.className = "message ai-message";
+    loadingMessage.id = "loading-message";
+
+    loadingMessage.innerHTML = `
+        <strong>AI:</strong> Thinking...
+    `;
+
+    chatMessages.appendChild(loadingMessage);
+
+    scrollToBottom();
+}
+
+function hideLoadingIndicator() {
+
+    const loadingMessage = document.getElementById("loading-message");
+
+    if (loadingMessage) {
+        loadingMessage.remove();
+    }
+
+}
+
 // Send request to FastAPI
 async function sendToAPI(message) {
 
@@ -44,10 +80,15 @@ async function sendToAPI(message) {
         })
     });
 
+    if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+    }
+
     return await response.json();
 }
 
 async function handleSend() {
+
     // Read user input
     const message = messageInput.value.trim();
 
@@ -58,16 +99,34 @@ async function handleSend() {
     // Clear the input immediately
     messageInput.value = "";
 
-    // Return focus to the input
-    messageInput.focus();
-
     // Show the user's message
     addMessage("You", message, "user-message");
 
-    // Send request to the API and get the response
-    const response = await sendToAPI(message);
+    // Enter loading state
+    setLoading(true);
+    showLoadingIndicator();
+    try {
 
-    // Show the AI reply
-    addMessage("AI", response.reply, "ai-message");
+        // Send request to the API
+        const response = await sendToAPI(message);
+        hideLoadingIndicator();
+        // Show AI reply
+        addMessage("AI", response.reply, "ai-message");
 
-};
+    } catch (error) {
+
+        console.error(error);
+        hideLoadingIndicator();
+        addMessage(
+            "AI",
+            "Sorry, something went wrong. Please try again.",
+            "ai-message"
+        );
+
+    } finally {
+
+        // Always restore the UI
+        setLoading(false);
+
+    }
+}
