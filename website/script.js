@@ -3,9 +3,11 @@ const messageInput = document.getElementById("message-input");
 const sendButton = document.getElementById("send-button");
 const chatMessages = document.getElementById("chat-messages");
 
+// Create a unique session ID for this browser tab
+const sessionId = crypto.randomUUID();
+
 // Listen for button clicks
 sendButton.addEventListener("click", handleSend);
-
 
 // Listen for Enter key presses
 messageInput.addEventListener("keydown", function (event) {
@@ -14,7 +16,6 @@ messageInput.addEventListener("keydown", function (event) {
         handleSend();
     }
 });
-
 
 // Show the user's message
 function addMessage(sender, text, className) {
@@ -76,6 +77,7 @@ async function sendToAPI(message) {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
+            session_id: sessionId,
             message: message
         })
     });

@@ -19,7 +19,7 @@ def get_client() -> OpenAI:
     return OpenAI(api_key=OPENAI_API_KEY)
 
 
-def ask_ai(system_prompt: str, user_message: str) -> str:
+def ask_ai(system_prompt: str, conversation: list) -> str:
     """
     Send a request to OpenAI and return the AI response.
     """
@@ -30,7 +30,7 @@ def ask_ai(system_prompt: str, user_message: str) -> str:
         response = client.responses.create(
             model=OPENAI_MODEL,
             instructions=system_prompt,
-            input=user_message,
+            input=conversation,
         )
 
         return response.output_text
