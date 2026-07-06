@@ -1,4 +1,5 @@
 from openai import OpenAI
+from openai import OpenAIError
 
 from app.config import OPENAI_API_KEY
 from app.config import OPENAI_MODEL
@@ -25,10 +26,16 @@ def ask_ai(system_prompt: str, user_message: str) -> str:
 
     client = get_client()
 
-    response = client.responses.create(
-        model=OPENAI_MODEL,
-        instructions=system_prompt,
-        input=user_message,
-    )
+    try:
+        response = client.responses.create(
+            model=OPENAI_MODEL,
+            instructions=system_prompt,
+            input=user_message,
+        )
 
-    return response.output_text
+        return response.output_text
+
+    except OpenAIError as error:
+        raise RuntimeError(
+            f"OpenAI request failed: {error}"
+        ) from error
