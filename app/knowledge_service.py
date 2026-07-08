@@ -1,11 +1,27 @@
+import re
 from pathlib import Path
 
+STOP_WORDS = {
+    "a", "an", "the",
+    "is", "are", "was", "were",
+    "what", "when", "where", "who", "why", "how",
+    "do", "does", "did",
+    "can", "could", "would", "should",
+    "i", "me", "my",
+    "you", "your",
+    "we", "our",
+    "to", "of", "for", "in", "on", "at", "with",
+    "and", "or"
+}
+
+
 def load_knowledge():
-    """Load and return the knowledge base """
+    """Load the coffee shop knowledge base."""
 
     knowledge_path = Path("knowledge/coffee_shop.txt")
 
     return knowledge_path.read_text(encoding="utf-8")
+
 
 def split_into_sections(knowledge):
     """Split the knowledge into individual sections."""
@@ -19,6 +35,18 @@ def split_into_sections(knowledge):
             sections.append(section)
 
     return sections
+
+
+def preprocess_question(question):
+    """Convert a question into searchable keywords."""
+    keywords = re.findall(r"\w+", question.lower())
+
+    return [
+        keyword
+        for keyword in keywords
+        if keyword not in STOP_WORDS
+    ]
+
 
 def search_sections(sections, keywords):
     """Search sections for matching keywords."""
@@ -35,6 +63,7 @@ def search_sections(sections, keywords):
 
     return matches
 
+
 def retrieve_relevant_knowledge(question):
     """Retrieve knowledge relevant to the user's question."""
 
@@ -42,7 +71,7 @@ def retrieve_relevant_knowledge(question):
 
     sections = split_into_sections(knowledge)
 
-    keywords = question.lower().split()
+    keywords = preprocess_question(question)
 
     matches = search_sections(sections, keywords)
 
