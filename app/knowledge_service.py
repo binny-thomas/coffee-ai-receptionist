@@ -49,19 +49,27 @@ def preprocess_question(question):
 
 
 def search_sections(sections, keywords):
-    """Search sections for matching keywords."""
+    """Search sections and rank them by keyword relevance."""
 
     matches = []
 
     for section in sections:
         section_lower = section.lower()
+        score = 0
 
         for keyword in keywords:
             if keyword in section_lower:
-                matches.append(section)
-                break
+                score += 1
 
-    return matches
+        if score > 0:
+            matches.append((section, score))
+
+    matches.sort(key=lambda item: item[1], reverse=True)
+
+    return [
+        section
+        for section, score in matches
+    ]
 
 
 def retrieve_relevant_knowledge(question):
@@ -76,4 +84,3 @@ def retrieve_relevant_knowledge(question):
     matches = search_sections(sections, keywords)
 
     return matches
-
